@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italianno&display=swap">
+    <title>Şehirler</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#"
+            ><img
+              src="{{ url_for('static', filename='icons8-beach-50.png') }}"
+              alt="moveit brand icon"
+              height="30"
+            />
+            Explore</a
+          >
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/#city-section">City</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/contact">Contact Us</a>
+              </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="btn btn-outline-primary" href="#"
+                    >Hi, {{ current_user.name }}</a
+                  >
+                </li>
+                {% else %}
+                <li class="nav-item">
+                  <a class="btn btn-outline-primary" href="{{ url_for('login') }}"
+                    >Login</a
+                  >
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                  <a class="btn btn-outline-danger" href="{{ url_for('logout') }}"
+                    >Log Out</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-12 text-center city-name" style="font-family: 'Italianno', cursive;">
+                <h1>{{ city.city_name }}</h1>
+            </div>
+            <div class="col-md-6 text-center">
+                <img id="cityImage" src="{{ city.image_url }}" alt="Sehir Resmi" class="img-fluid hotel-image">
+            </div>
+            
+        </div>
+        <div class="col-md-6 text-center mx-auto">
+            <div class="explore-info">
+                <h4>Description </h4>
+                <p>{{ city.city_description }}</p>
+            </div>
+        </div>
+        
+
+        <hr>
+
+        
+
+        <div id="Description" class="row">
+
+            <div class="col-md-6 text-center">
+                <div class="explore-info">
+                    <h4>Cultural Places</h4>
+                    <p>{{ city.cultural_places }}</p>
+                </div>
+            </div>
+            <div class="col-md-6 text-center">
+                <div class="explore-info">
+                    <h4>Bars</h4>
+                    <p>{{ city.bars }}</p>
+                </div>
+            </div>
+            <div class="col-md-6 text-center">
+                <div class="explore-info">
+                    <h4>Touristic Places</h4>
+                    <p>{{ city.tourist_attractions }}</p>
+                </div>
+            </div>
+            <div class="col-md-6 text-center">
+                <div class="explore-info">
+                    <h4>Restaurants</h4>
+                    <p>{{ city.restaurants }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mt-3">
+                    
+            <div data-bs-spy="scroll" id="Comments" class="row scrollspy-example">
+                <div class="col-md-12 text-center">
+    
+                    <h2>Comments</h2>
+                    {% for comment in comments %}
+                    <p><strong>{{ comment.username.name }}</strong>: {{ comment.text }}</p>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+                
+        
+            <div id="AddComment" class="row">
+                <div class="col-md-12 text-center">
+                    <form method="POST">
+                        <div class="form-group">
+                            <label for="comment_text">Add a Comment:</label>
+                            <textarea class="form-control" id="comment_text" name="comment_text" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <h4>Harita</h4>
+                        <div id="map" style="height: 400px; width: 1100px;">
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <style>
+        #cityImage {
+            max-width: 175%;
+            height: 500px;
+            border-radius: 15px; 
+            margin-left: 35%;
+        }
+        #Comments {
+            border: 1px solid #ddd; /* Add a border around the comments section */
+            height: 300px; /* Set a fixed height for the comments section */
+            overflow-y: scroll; /* Add a vertical scrollbar to the comments section */
+        }
+
+        /* Add padding to the comments container */
+        .scrollspy-example {
+            padding: 10px;
+        }
+        .navbar-nav a.nav-link {
+        color: gray !important;
+    }
+
+    
+    .navbar-brand {
+        color: gray !important;
+    }
+    </style>
+
+    <script>
+        function initMap() {
+     var hotelLocation = { lat: 36.8616, lng: 30.6370 };
+      var map = new google.maps.Map(document.getElementById('map'), {
+        center: hotelLocation,
+        zoom: 14,
+      });
+      var marker = new google.maps.Marker({
+        position: hotelLocation,
+        map: map,
+        title: '{{ city[1] }}', 
+      });
+    }
+    </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbhs-qDzm2EKZ3HLuHHFCo8ovA5yvcgmY&libraries=places&callback=initMap"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    
+</body>
+
+</html>
